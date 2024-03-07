@@ -2,6 +2,9 @@ package main
 
 import (
 	"context"
+	"errors"
+	"fmt"
+	"os"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -14,4 +17,16 @@ func main() {
 
 func ExecuteLambda(ctx context.Context, events events.CognitoEventUserPoolsPostConfirmation) (events.CognitoEventUserPoolsPostConfirmation, error){
 	awsgo.InitializeAWS()
+
+	if !ValidateParameters() {
+		fmt.Println("Error in parameters. Should send 'SecretManager'")
+		err := errors.New("Error in parameters. Should send 'SecretManager'")
+		return events, err
+	}
+}
+
+func ValidateParameters() bool {
+	var loadParameter bool
+	_, loadParameter = os.LookupEnv("SecretName")
+	return loadParameter
 }
