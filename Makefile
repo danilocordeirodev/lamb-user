@@ -1,8 +1,5 @@
-GOARCH=arm64 
-GOOS=linux 
-
 build:
-	go build -tags lambda.norpc -o ./bin/bootstrap
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -tags lambda.norpc -o ./bin/bootstrap
 
 deploy: build
 	cd bin && zip -r bootstrap.zip bootstrap
